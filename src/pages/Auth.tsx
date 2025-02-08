@@ -5,6 +5,7 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
+import { Github } from "lucide-react";
 
 const Auth = () => {
   const [email, setEmail] = useState("");
@@ -46,6 +47,23 @@ const Auth = () => {
     }
   };
 
+  const handleGitHubLogin = async () => {
+    try {
+      const { error } = await supabase.auth.signInWithOAuth({
+        provider: 'github',
+        options: {
+          redirectTo: `${window.location.origin}/`
+        }
+      });
+      if (error) throw error;
+    } catch (error: any) {
+      toast({
+        variant: "destructive",
+        description: error.message,
+      });
+    }
+  };
+
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-b from-ivory to-white">
       <div className="w-full max-w-md p-8 space-y-6 bg-white rounded-xl shadow-lg">
@@ -76,13 +94,26 @@ const Auth = () => {
             className="w-full bg-terracotta hover:bg-terracotta/90"
             disabled={loading}
           >
-            {loading
-              ? "Loading..."
-              : isSignUp
-              ? "Create Account"
-              : "Sign In"}
+            {loading ? "Loading..." : isSignUp ? "Create Account" : "Sign In"}
           </Button>
         </form>
+        <div className="relative">
+          <div className="absolute inset-0 flex items-center">
+            <span className="w-full border-t" />
+          </div>
+          <div className="relative flex justify-center text-xs uppercase">
+            <span className="bg-white px-2 text-gray-500">Or continue with</span>
+          </div>
+        </div>
+        <Button
+          onClick={handleGitHubLogin}
+          variant="outline"
+          className="w-full"
+          type="button"
+        >
+          <Github className="mr-2 h-4 w-4" />
+          GitHub
+        </Button>
         <div className="text-center">
           <button
             onClick={() => setIsSignUp(!isSignUp)}

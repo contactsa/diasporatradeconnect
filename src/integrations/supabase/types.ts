@@ -30,6 +30,7 @@ export type Database = {
           brand_owner: boolean | null
           created_at: string
           full_name: string | null
+          github_handle: string | null
           id: string
           store_owner: boolean | null
           updated_at: string
@@ -40,6 +41,7 @@ export type Database = {
           brand_owner?: boolean | null
           created_at?: string
           full_name?: string | null
+          github_handle?: string | null
           id: string
           store_owner?: boolean | null
           updated_at?: string
@@ -50,6 +52,7 @@ export type Database = {
           brand_owner?: boolean | null
           created_at?: string
           full_name?: string | null
+          github_handle?: string | null
           id?: string
           store_owner?: boolean | null
           updated_at?: string
