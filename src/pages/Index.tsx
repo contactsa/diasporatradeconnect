@@ -22,6 +22,10 @@ const Index = () => {
         setSession(currentSession);
       } catch (error) {
         console.error('Error fetching session:', error);
+        toast({
+          variant: "destructive",
+          description: "Error fetching session",
+        });
       } finally {
         setLoading(false);
       }
@@ -32,28 +36,40 @@ const Index = () => {
     const {
       data: { subscription },
     } = supabase.auth.onAuthStateChange((_event, session) => {
-      setSession(session);
+      if (session !== null) {
+        setSession(session);
+      } else {
+        setSession(null);
+      }
     });
 
-    return () => subscription.unsubscribe();
-  }, []);
+    return () => {
+      subscription?.unsubscribe();
+    };
+  }, [toast]);
 
   const handleSignOut = async () => {
-    const { error } = await supabase.auth.signOut();
-    if (error) {
-      toast({
-        variant: "destructive",
-        description: error.message,
-      });
-    } else {
+    try {
+      const { error } = await supabase.auth.signOut();
+      if (error) throw error;
+      
       toast({
         description: "Signed out successfully",
+      });
+    } catch (error: any) {
+      toast({
+        variant: "destructive",
+        description: error.message || "Error signing out",
       });
     }
   };
 
   if (loading) {
-    return null; // or return a loading spinner if you prefer
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="text-terracotta">Loading...</div>
+      </div>
+    );
   }
 
   return (
