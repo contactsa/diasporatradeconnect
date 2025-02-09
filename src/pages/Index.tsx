@@ -16,46 +16,50 @@ const Index = () => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    // Flag to prevent setting state on unmounted component
     let mounted = true;
 
-    async function getSession() {
+    async function getInitialSession() {
       try {
         const { data: { session: currentSession }, error } = await supabase.auth.getSession();
         if (error) throw error;
         
+        // Only update state if component is still mounted
         if (mounted) {
-          setSession(currentSession);
+          if (currentSession) {
+            setSession(currentSession);
+          }
+          setLoading(false);
         }
       } catch (error: any) {
-        console.error('Error fetching session:', error);
+        console.error('Error fetching session:', error.message);
         if (mounted) {
           toast({
             variant: "destructive",
-            description: error.message || "Error fetching session",
+            description: "Error fetching session: " + error.message,
           });
-        }
-      } finally {
-        if (mounted) {
           setLoading(false);
         }
       }
     }
 
-    getSession();
+    getInitialSession();
 
-    const {
-      data: { subscription },
-    } = supabase.auth.onAuthStateChange((_event, session) => {
+    // Set up auth state listener
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
       if (mounted) {
-        setSession(session);
+        if (session) {
+          setSession(session);
+        } else {
+          setSession(null);
+        }
       }
     });
 
+    // Cleanup subscription and prevent memory leaks
     return () => {
       mounted = false;
-      if (subscription && typeof subscription.unsubscribe === 'function') {
-        subscription.unsubscribe();
-      }
+      subscription?.unsubscribe();
     };
   }, [toast]);
 
