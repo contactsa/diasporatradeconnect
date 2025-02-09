@@ -16,18 +16,28 @@ const Index = () => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    let mounted = true;
+
     async function getSession() {
       try {
-        const { data: { session: currentSession } } = await supabase.auth.getSession();
-        setSession(currentSession);
-      } catch (error) {
+        const { data: { session: currentSession }, error } = await supabase.auth.getSession();
+        if (error) throw error;
+        
+        if (mounted) {
+          setSession(currentSession);
+        }
+      } catch (error: any) {
         console.error('Error fetching session:', error);
-        toast({
-          variant: "destructive",
-          description: "Error fetching session",
-        });
+        if (mounted) {
+          toast({
+            variant: "destructive",
+            description: error.message || "Error fetching session",
+          });
+        }
       } finally {
-        setLoading(false);
+        if (mounted) {
+          setLoading(false);
+        }
       }
     }
 
@@ -36,15 +46,16 @@ const Index = () => {
     const {
       data: { subscription },
     } = supabase.auth.onAuthStateChange((_event, session) => {
-      if (session !== null) {
+      if (mounted) {
         setSession(session);
-      } else {
-        setSession(null);
       }
     });
 
     return () => {
-      subscription?.unsubscribe();
+      mounted = false;
+      if (subscription && typeof subscription.unsubscribe === 'function') {
+        subscription.unsubscribe();
+      }
     };
   }, [toast]);
 
@@ -56,6 +67,7 @@ const Index = () => {
       toast({
         description: "Signed out successfully",
       });
+      setSession(null);
     } catch (error: any) {
       toast({
         variant: "destructive",
