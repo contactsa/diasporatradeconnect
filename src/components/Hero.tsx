@@ -6,6 +6,15 @@ export const Hero = () => {
     <div className="relative min-h-screen flex items-center justify-center overflow-hidden bg-gradient-to-b from-ivory to-white">
       <div className="absolute inset-0 z-0 bg-[url('/pattern.svg')] opacity-5" />
       <div className="container mx-auto px-4 z-10">
+        {/* Logo Section */}
+        <div className="w-full flex justify-center mb-12">
+          <img 
+            src="/logo.svg" 
+            alt="Seller Africa Logo" 
+            className="h-24 w-auto"
+          />
+        </div>
+
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}

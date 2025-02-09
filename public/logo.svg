@@ -1,0 +1,13 @@
+
+<svg width="400" height="100" viewBox="0 0 400 100" xmlns="http://www.w3.org/2000/svg">
+  <g>
+    <!-- Shopping Cart Icon -->
+    <path d="M30,40 L80,40 L70,70 L40,70 Z" fill="#1A8917" stroke="#1A8917" stroke-width="2"/>
+    <circle cx="45" cy="80" r="5" fill="#1A8917"/>
+    <circle cx="65" cy="80" r="5" fill="#1A8917"/>
+    
+    <!-- Text -->
+    <text x="100" y="60" font-family="Arial" font-weight="bold" font-size="40" fill="#1A1F2C">SELLER AFRICA</text>
+    <text x="100" y="80" font-family="Arial" font-size="20" fill="#1A1F2C">African E-Commerce Marketplace</text>
+  </g>
+</svg>
