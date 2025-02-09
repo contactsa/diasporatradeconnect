@@ -13,11 +13,21 @@ const Index = () => {
   const navigate = useNavigate();
   const { toast } = useToast();
   const [session, setSession] = useState<any>(null);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    supabase.auth.getSession().then(({ data: { session } }) => {
-      setSession(session);
-    });
+    async function getSession() {
+      try {
+        const { data: { session: currentSession } } = await supabase.auth.getSession();
+        setSession(currentSession);
+      } catch (error) {
+        console.error('Error fetching session:', error);
+      } finally {
+        setLoading(false);
+      }
+    }
+
+    getSession();
 
     const {
       data: { subscription },
@@ -41,6 +51,10 @@ const Index = () => {
       });
     }
   };
+
+  if (loading) {
+    return null; // or return a loading spinner if you prefer
+  }
 
   return (
     <div className="min-h-screen bg-white">
