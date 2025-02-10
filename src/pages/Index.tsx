@@ -25,7 +25,7 @@ const Index = () => {
             Join our community today and be part of the African commerce revolution
           </p>
           <a 
-            href="https://sellerafrica.com"
+            href="https://sellerafrica.com/become-a-seller/"
             target="_blank"
             rel="noopener noreferrer"
             className="inline-flex items-center justify-center px-8 py-3 bg-white text-terracotta hover:bg-white/90 font-medium transform transition-all hover:scale-105 rounded-lg"
